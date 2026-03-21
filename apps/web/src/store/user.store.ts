@@ -24,6 +24,6 @@ export const useUserStore = create<UserStore>()((set) => ({
 
 // ── Selector hooks ────────────────────────────────────────────────────────────
 
-export const useCurrentUser = () => useUserStore((s) => s.user)
+export const useCurrentUser = () => useUserStore((state) => state.user)
 
-export const useIsAuthenticated = () => useUserStore((s) => s.user !== null)
+export const useIsAuthenticated = () => useUserStore((state) => state.user !== null)
