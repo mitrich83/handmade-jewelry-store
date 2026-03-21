@@ -25,11 +25,13 @@ export const useCartStore = create<CartStore>()(
 
       addItem: (item, quantity = 1) => {
         set((state) => {
-          const existing = state.items.find((i) => i.productId === item.productId)
-          if (existing) {
+          const existingItem = state.items.find((cartItem) => cartItem.productId === item.productId)
+          if (existingItem) {
             return {
-              items: state.items.map((i) =>
-                i.productId === item.productId ? { ...i, quantity: i.quantity + quantity } : i,
+              items: state.items.map((cartItem) =>
+                cartItem.productId === item.productId
+                  ? { ...cartItem, quantity: cartItem.quantity + quantity }
+                  : cartItem,
               ),
             }
           }
@@ -39,7 +41,7 @@ export const useCartStore = create<CartStore>()(
 
       removeItem: (productId) => {
         set((state) => ({
-          items: state.items.filter((i) => i.productId !== productId),
+          items: state.items.filter((cartItem) => cartItem.productId !== productId),
         }))
       },
 
@@ -49,7 +51,9 @@ export const useCartStore = create<CartStore>()(
           return
         }
         set((state) => ({
-          items: state.items.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+          items: state.items.map((cartItem) =>
+            cartItem.productId === productId ? { ...cartItem, quantity } : cartItem,
+          ),
         }))
       },
 
@@ -68,10 +72,12 @@ export const useCartStore = create<CartStore>()(
 // Fine-grained selectors prevent unnecessary re-renders — components subscribe
 // only to the slice of state they actually need.
 
-export const useCartItems = () => useCartStore((s) => s.items)
+export const useCartItems = () => useCartStore((state) => state.items)
 
 export const useCartTotalItems = () =>
-  useCartStore((s) => s.items.reduce((sum, i) => sum + i.quantity, 0))
+  useCartStore((state) => state.items.reduce((sum, cartItem) => sum + cartItem.quantity, 0))
 
 export const useCartTotalPrice = () =>
-  useCartStore((s) => s.items.reduce((sum, i) => sum + i.price * i.quantity, 0))
+  useCartStore((state) =>
+    state.items.reduce((sum, cartItem) => sum + cartItem.price * cartItem.quantity, 0),
+  )
