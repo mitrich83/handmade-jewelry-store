@@ -33,6 +33,31 @@ Before implementing any task, read these documents in order:
 After finishing implementation: show changed files, suggest commit message, stop.
 User does all git write operations manually.
 
+### Naming — mandatory everywhere
+
+Every name must tell **what it stores or does** — no guessing required.
+
+- **Components**: `ProductCard`, `CartItemRow`, `CheckoutSummary` — noun describing what it renders
+- **Hooks**: `useCartTotalPrice`, `useProductsByCategory` — `use` + what it returns
+- **Functions**: `formatPriceInDollars`, `fetchProductBySlug`, `calculateOrderTotal` — verb + what it does
+- **Variables**: `cartItems`, `isCheckoutPending`, `productSlug` — noun or `is/has/can` boolean prefix
+- **Props**: `onAddToCart`, `isOutOfStock`, `productImageUrl` — same rules as variables
+- **Parameters**: `productId`, `quantity`, `locale` — never `id`, `val`, `param`, `data`
+- **Event handlers**: `handleAddToCart`, `handleQuantityChange` — `handle` + event description
+- **Callbacks in array methods**: use the actual domain name — `cartItem`, `product`, `order` — never `i`, `x`, `item`, `obj`
+- **Zustand selectors**: always `(state) =>` — never `(s) =>`
+- **Fetch responses**: `response` — never `res`
+- **Catch errors**: `error` — never `e` or `err`
+
+**Exceptions (universally understood conventions, always acceptable):**
+
+- `t` from `useTranslations()` — universal i18n convention
+- `cn()` — utility function, widely known in Shadcn ecosystem
+- `sum`, `acc` in `.reduce()` — mathematical accumulators
+- `prev` in `setState(prev => ...)` — React setState convention
+
+**When editing existing code**: if you encounter a non-descriptive name in code you are touching, rename it.
+
 ### TypeScript
 
 - `any` type is **forbidden** — ESLint will error. Use explicit types or generics.
