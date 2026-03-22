@@ -1,5 +1,5 @@
+import { ValidationPipe, type INestApplication } from '@nestjs/common'
 import { Test, type TestingModule } from '@nestjs/testing'
-import { type INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
 import { AppModule } from '../src/app.module'
 import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter'
@@ -14,6 +14,13 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication()
     app.setGlobalPrefix('api')
+    app.enableCors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
+    )
     app.useGlobalFilters(new HttpExceptionFilter())
     await app.init()
   })
@@ -30,6 +37,27 @@ describe('AppController (e2e)', () => {
         .expect((response) => {
           expect(response.body.status).toBe('ok')
           expect(typeof response.body.timestamp).toBe('string')
+        })
+    })
+
+    it('returns CORS header for allowed frontend origin', () => {
+      return request(app.getHttpServer())
+        .get('/api/health')
+        .set('Origin', 'http://localhost:3000')
+        .expect(200)
+        .expect((response) => {
+          expect(response.headers['access-control-allow-origin']).toBe('http://localhost:3000')
+          expect(response.headers['access-control-allow-credentials']).toBe('true')
+        })
+    })
+
+    it('does not return CORS header for disallowed origin', () => {
+      return request(app.getHttpServer())
+        .get('/api/health')
+        .set('Origin', 'http://evil.com')
+        .expect(200)
+        .expect((response) => {
+          expect(response.headers['access-control-allow-origin']).not.toBe('http://evil.com')
         })
     })
   })
