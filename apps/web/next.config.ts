@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
+    // dangerouslyAllowSVG required because placehold.co returns SVG format
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'none'; style-src 'unsafe-inline'",
     remotePatterns: [
       {
         // Placeholder images used in seed data during development

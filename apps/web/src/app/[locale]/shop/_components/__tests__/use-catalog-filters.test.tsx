@@ -109,7 +109,7 @@ describe('useCatalogFilters — updateFilter()', () => {
     })
 
     expect(mockRouterPush).toHaveBeenCalledOnce()
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).toContain('categorySlug=bracelets')
   })
 
@@ -122,7 +122,7 @@ describe('useCatalogFilters — updateFilter()', () => {
       result.current.updateFilter('categorySlug', '')
     })
 
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).not.toContain('categorySlug')
   })
 
@@ -135,7 +135,7 @@ describe('useCatalogFilters — updateFilter()', () => {
       result.current.updateFilter('minPrice', '20')
     })
 
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).not.toContain('page=')
   })
 
@@ -148,7 +148,7 @@ describe('useCatalogFilters — updateFilter()', () => {
       result.current.updateFilter('maxPrice', '100')
     })
 
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).toContain('minPrice=10')
     expect(pushedUrl).toContain('maxPrice=100')
   })
@@ -162,7 +162,7 @@ describe('useCatalogFilters — updateSort()', () => {
       result.current.updateSort('price_asc')
     })
 
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).toContain('sortBy=price')
     expect(pushedUrl).toContain('sortOrder=asc')
   })
@@ -174,7 +174,7 @@ describe('useCatalogFilters — updateSort()', () => {
       result.current.updateSort('avgRating_desc')
     })
 
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).toContain('sortBy=avgRating')
     expect(pushedUrl).toContain('sortOrder=desc')
   })
@@ -188,7 +188,7 @@ describe('useCatalogFilters — updateSort()', () => {
       result.current.updateSort('price_desc')
     })
 
-    const pushedUrl = mockRouterPush.mock.calls[0][0] as string
+    const pushedUrl = mockRouterPush.mock.calls[0]?.[0] as string
     expect(pushedUrl).not.toContain('page=')
   })
 })

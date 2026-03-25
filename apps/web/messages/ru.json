@@ -80,6 +80,27 @@
     "paginationNext": "Следующая страница",
     "paginationInfo": "Страница {current} из {total}"
   },
+  "cartPage": {
+    "metaTitle": "Ваша корзина",
+    "metaDescription": "Просмотрите товары в корзине и перейдите к оформлению заказа.",
+    "title": "Ваша корзина",
+    "itemsListLabel": "Товары в корзине",
+    "emptyTitle": "Корзина пуста",
+    "emptyDescription": "Похоже, вы ещё ничего не добавили. Просмотрите наш каталог и найдите что-то особенное.",
+    "continueShopping": "Продолжить покупки",
+    "summaryLabel": "Сводка заказа",
+    "summaryTitle": "Сводка заказа",
+    "subtotalItems": "{count, plural, one {Подытог (# товар)} few {Подытог (# товара)} other {Подытог (# товаров)}}",
+    "shipping": "Доставка",
+    "shippingCalculated": "Рассчитывается при оформлении",
+    "total": "Итого",
+    "proceedToCheckout": "Оформить заказ",
+    "secureCheckout": "Безопасная оплата — SSL шифрование",
+    "removeItem": "Убрать {title} из корзины",
+    "quantityLabel": "Количество",
+    "decreaseQuantity": "Уменьшить количество",
+    "increaseQuantity": "Увеличить количество"
+  },
   "home": {
     "badge": "Скоро",
     "title": "Магазин украшений ручной работы",

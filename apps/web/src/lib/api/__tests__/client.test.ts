@@ -34,7 +34,7 @@ describe('apiClient()', () => {
   it('returns parsed JSON on a successful response', async () => {
     const products = await apiClient<{ id: string }[]>('/products')
     expect(products).toHaveLength(2)
-    expect(products[0].id).toBe('prod-1')
+    expect(products[0]?.id).toBe('prod-1')
   })
 
   it('throws ApiError with correct status on 404', async () => {

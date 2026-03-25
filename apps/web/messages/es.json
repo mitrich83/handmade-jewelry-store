@@ -80,6 +80,27 @@
     "paginationNext": "Página siguiente",
     "paginationInfo": "Página {current} de {total}"
   },
+  "cartPage": {
+    "metaTitle": "Tu carrito",
+    "metaDescription": "Revisa los artículos en tu carrito y procede al pago.",
+    "title": "Tu carrito",
+    "itemsListLabel": "Artículos del carrito",
+    "emptyTitle": "Tu carrito está vacío",
+    "emptyDescription": "Parece que aún no has añadido nada. Explora nuestra colección para encontrar algo que te encante.",
+    "continueShopping": "Seguir comprando",
+    "summaryLabel": "Resumen del pedido",
+    "summaryTitle": "Resumen del pedido",
+    "subtotalItems": "{count, plural, one {Subtotal (# artículo)} other {Subtotal (# artículos)}}",
+    "shipping": "Envío",
+    "shippingCalculated": "Calculado al finalizar la compra",
+    "total": "Total",
+    "proceedToCheckout": "Proceder al pago",
+    "secureCheckout": "Pago seguro — cifrado SSL",
+    "removeItem": "Eliminar {title} del carrito",
+    "quantityLabel": "Cantidad",
+    "decreaseQuantity": "Disminuir cantidad",
+    "increaseQuantity": "Aumentar cantidad"
+  },
   "home": {
     "badge": "Próximamente",
     "title": "Tienda de Joyería Artesanal",

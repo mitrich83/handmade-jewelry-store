@@ -80,6 +80,27 @@
     "paginationNext": "Next page",
     "paginationInfo": "Page {current} of {total}"
   },
+  "cartPage": {
+    "metaTitle": "Your Cart",
+    "metaDescription": "Review the items in your cart and proceed to checkout.",
+    "title": "Your Cart",
+    "itemsListLabel": "Cart items",
+    "emptyTitle": "Your cart is empty",
+    "emptyDescription": "Looks like you haven't added anything yet. Browse our collection to find something you'll love.",
+    "continueShopping": "Continue shopping",
+    "summaryLabel": "Order summary",
+    "summaryTitle": "Order Summary",
+    "subtotalItems": "{count, plural, one {Subtotal (# item)} other {Subtotal (# items)}}",
+    "shipping": "Shipping",
+    "shippingCalculated": "Calculated at checkout",
+    "total": "Total",
+    "proceedToCheckout": "Proceed to Checkout",
+    "secureCheckout": "Secure checkout — SSL encrypted",
+    "removeItem": "Remove {title} from cart",
+    "quantityLabel": "Quantity",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity"
+  },
   "home": {
     "badge": "Coming Soon",
     "title": "Handmade Jewelry Store",

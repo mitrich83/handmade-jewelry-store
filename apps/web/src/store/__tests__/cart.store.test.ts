@@ -32,14 +32,14 @@ describe('addItem()', () => {
 
     const { items } = useCartStore.getState()
     expect(items).toHaveLength(1)
-    expect(items[0].productId).toBe('prod-1')
-    expect(items[0].quantity).toBe(1)
+    expect(items[0]?.productId).toBe('prod-1')
+    expect(items[0]?.quantity).toBe(1)
   })
 
   it('adds a new product with a specified quantity', () => {
     useCartStore.getState().addItem(mockRing, 3)
 
-    expect(useCartStore.getState().items[0].quantity).toBe(3)
+    expect(useCartStore.getState().items[0]?.quantity).toBe(3)
   })
 
   it('increments quantity when the same product is added twice', () => {
@@ -48,14 +48,14 @@ describe('addItem()', () => {
 
     const { items } = useCartStore.getState()
     expect(items).toHaveLength(1) // no duplicate entries
-    expect(items[0].quantity).toBe(2)
+    expect(items[0]?.quantity).toBe(2)
   })
 
   it('increments by the specified quantity on repeated add', () => {
     useCartStore.getState().addItem(mockRing, 2)
     useCartStore.getState().addItem(mockRing, 3)
 
-    expect(useCartStore.getState().items[0].quantity).toBe(5)
+    expect(useCartStore.getState().items[0]?.quantity).toBe(5)
   })
 
   it('keeps multiple different products as separate cart items', () => {
@@ -68,11 +68,11 @@ describe('addItem()', () => {
   it('stores all product snapshot fields in the cart item', () => {
     useCartStore.getState().addItem(mockRing)
 
-    const cartItem = useCartStore.getState().items[0]
-    expect(cartItem.slug).toBe('sterling-silver-ring')
-    expect(cartItem.title).toBe('Sterling Silver Ring')
-    expect(cartItem.price).toBe(49.99)
-    expect(cartItem.image).toBe('/images/ring.jpg')
+    const [cartItem] = useCartStore.getState().items
+    expect(cartItem?.slug).toBe('sterling-silver-ring')
+    expect(cartItem?.title).toBe('Sterling Silver Ring')
+    expect(cartItem?.price).toBe(49.99)
+    expect(cartItem?.image).toBe('/images/ring.jpg')
   })
 })
 
@@ -93,7 +93,7 @@ describe('removeItem()', () => {
 
     const { items } = useCartStore.getState()
     expect(items).toHaveLength(1)
-    expect(items[0].productId).toBe('prod-2')
+    expect(items[0]?.productId).toBe('prod-2')
   })
 
   it('does nothing when removing a product not in the cart', () => {
@@ -111,7 +111,7 @@ describe('updateQuantity()', () => {
     useCartStore.getState().addItem(mockRing)
     useCartStore.getState().updateQuantity('prod-1', 5)
 
-    expect(useCartStore.getState().items[0].quantity).toBe(5)
+    expect(useCartStore.getState().items[0]?.quantity).toBe(5)
   })
 
   it('removes the item when quantity is set to 0', () => {
