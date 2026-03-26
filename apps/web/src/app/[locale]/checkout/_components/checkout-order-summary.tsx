@@ -2,13 +2,44 @@
 
 import { useTranslations } from 'next-intl'
 import { useCartItems, useCartTotalPrice } from '@/store/cart.store'
-import { CHECKOUT_SHIPPING_COST } from '../_lib/build-order-payload'
+import {
+  SHIPPING_OPTIONS,
+  DEFAULT_SHIPPING_OPTION_ID,
+  calculateShippingCost,
+  type ShippingOption,
+} from '../_lib/shipping-options'
+import {
+  calculateEstimatedDelivery,
+  formatDeliveryRange,
+} from '../_lib/calculate-estimated-delivery'
 
-export function CheckoutOrderSummary() {
+interface CheckoutOrderSummaryProps {
+  /** Resolved shipping cost. When omitted, derived from selectedOption + cart subtotal. */
+  shippingCost?: number
+  /** The shipping option currently selected by the user. Affects delivery date display. */
+  selectedOption?: ShippingOption
+}
+
+export function CheckoutOrderSummary({ shippingCost, selectedOption }: CheckoutOrderSummaryProps) {
   const t = useTranslations('checkoutPage')
   const cartItems = useCartItems()
   const cartSubtotal = useCartTotalPrice()
-  const orderTotal = cartSubtotal + CHECKOUT_SHIPPING_COST
+
+  // SHIPPING_OPTIONS always contains 'standard' — defined in the same file
+  const defaultOption = SHIPPING_OPTIONS.find((option) => option.id === DEFAULT_SHIPPING_OPTION_ID)
+  if (!defaultOption) throw new Error('Default shipping option not found in SHIPPING_OPTIONS')
+
+  // Use the passed option for display; fall back to default when no selection yet (step 1)
+  const displayOption: ShippingOption = selectedOption ?? defaultOption
+
+  const resolvedShippingCost = shippingCost ?? calculateShippingCost(displayOption, cartSubtotal)
+  const orderTotal = cartSubtotal + resolvedShippingCost
+
+  const delivery = calculateEstimatedDelivery(
+    displayOption.businessDaysMin,
+    displayOption.businessDaysMax,
+  )
+  const estimatedDeliveryRange = formatDeliveryRange(delivery.earliest, delivery.latest)
 
   return (
     <aside aria-label={t('orderSummaryLabel')} className="lg:col-span-1">
@@ -38,13 +69,23 @@ export function CheckoutOrderSummary() {
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>{t('shipping')}</span>
-            <data value={CHECKOUT_SHIPPING_COST}>${CHECKOUT_SHIPPING_COST.toFixed(2)}</data>
+            <data value={resolvedShippingCost}>
+              {resolvedShippingCost === 0 ? (
+                <span className="text-green-600 dark:text-green-400">{t('shippingFree')}</span>
+              ) : (
+                `$${resolvedShippingCost.toFixed(2)}`
+              )}
+            </data>
           </div>
           <div className="flex justify-between border-t border-border pt-2 font-semibold text-foreground">
             <span>{t('total')}</span>
             <data value={orderTotal}>${orderTotal.toFixed(2)}</data>
           </div>
         </div>
+
+        <p className="mt-3 text-xs text-muted-foreground">
+          {t('estimatedDelivery', { date: estimatedDeliveryRange })}
+        </p>
       </div>
     </aside>
   )

@@ -2,9 +2,6 @@ import type { CartItem } from '@jewelry/shared'
 import type { CreateOrderPayload } from '@/lib/api/orders'
 import type { CheckoutAddressFormValues } from '../_components/checkout-address-schema'
 
-// Flat shipping rate for MVP — replaced by Stripe-calculated shipping in #30
-export const CHECKOUT_SHIPPING_COST = 9.99
-
 /**
  * Converts cart items and address form values into the CreateOrderPayload
  * expected by POST /api/orders. Separates email (contact only) from the
@@ -13,7 +10,7 @@ export const CHECKOUT_SHIPPING_COST = 9.99
 export function buildOrderPayload(
   cartItems: CartItem[],
   formValues: CheckoutAddressFormValues,
-  shippingCost: number = CHECKOUT_SHIPPING_COST,
+  shippingCost: number,
 ): CreateOrderPayload {
   const { email, ...shippingAddress } = formValues
 

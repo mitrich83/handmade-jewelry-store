@@ -40,7 +40,7 @@ vi.mock('@/store/cart.store', () => ({
   useCartItems: () => mockCartItems,
 }))
 
-const mockFormValues: CheckoutAddressFormValues = {
+const mockAddressValues: CheckoutAddressFormValues = {
   email: 'jane@example.com',
   fullName: 'Jane Doe',
   addressLine1: '123 Main St',
@@ -69,7 +69,7 @@ describe('useSubmitCheckoutOrder()', () => {
     expect(result.current.isSubmitting).toBe(false)
   })
 
-  it('calls createOrder with payload built from cart items and form values', async () => {
+  it('calls createOrder with payload built from cart items, address values and shipping cost', async () => {
     mockCreateOrder.mockResolvedValue({ id: 'order-1', status: 'PENDING', total: 59.98 })
 
     const { result } = renderHook(() => useSubmitCheckoutOrder(), {
@@ -77,7 +77,7 @@ describe('useSubmitCheckoutOrder()', () => {
     })
 
     act(() => {
-      result.current.submitOrder(mockFormValues)
+      result.current.submitOrder({ addressValues: mockAddressValues, shippingCost: 5.99 })
     })
 
     await waitFor(() => expect(mockCreateOrder).toHaveBeenCalledOnce())
@@ -85,7 +85,10 @@ describe('useSubmitCheckoutOrder()', () => {
     const calledPayload = mockCreateOrder.mock.calls[0]?.[0]
     expect(calledPayload.items[0]?.productId).toBe('prod-1')
     expect(calledPayload.shippingAddress.fullName).toBe('Jane Doe')
+    expect(calledPayload.shippingCost).toBe(5.99)
+    // email is separated from shipping address
     expect(calledPayload.shippingAddress).not.toHaveProperty('email')
+    expect(calledPayload.guestEmail).toBe('jane@example.com')
   })
 
   it('navigates to the confirmation page on success', async () => {
@@ -96,7 +99,7 @@ describe('useSubmitCheckoutOrder()', () => {
     })
 
     act(() => {
-      result.current.submitOrder(mockFormValues)
+      result.current.submitOrder({ addressValues: mockAddressValues, shippingCost: 0 })
     })
 
     await waitFor(() =>
@@ -112,7 +115,7 @@ describe('useSubmitCheckoutOrder()', () => {
     })
 
     act(() => {
-      result.current.submitOrder(mockFormValues)
+      result.current.submitOrder({ addressValues: mockAddressValues, shippingCost: 5.99 })
     })
 
     await waitFor(() => expect(result.current.submitError).toBeInstanceOf(Error))

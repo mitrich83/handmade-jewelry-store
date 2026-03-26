@@ -17,12 +17,48 @@ vi.mock('@/i18n/navigation', () => ({
   ),
 }))
 
-// Prevent rendering the full CheckoutAddressForm after clicking "guest"
+// Stub out multi-step children to keep tests focused on CheckoutEntry routing logic
 vi.mock('../checkout-address-form', () => ({
-  CheckoutAddressForm: () => <div data-testid="checkout-address-form" />,
+  CheckoutAddressForm: ({ onNext }: { onNext: (values: unknown) => void }) => (
+    <div data-testid="checkout-address-form">
+      <button onClick={() => onNext({ email: 'test@test.com' })}>submit-address</button>
+    </div>
+  ),
 }))
 
-describe('CheckoutEntry', () => {
+vi.mock('../checkout-shipping-method-form', () => ({
+  CheckoutShippingMethodForm: ({
+    onNext,
+    onBack,
+  }: {
+    onNext: (option: unknown, cost: number) => void
+    onBack: () => void
+  }) => (
+    <div data-testid="checkout-shipping-method-form">
+      <button onClick={() => onNext({ id: 'standard' }, 5.99)}>submit-shipping</button>
+      <button onClick={onBack}>back-shipping</button>
+    </div>
+  ),
+}))
+
+vi.mock('../checkout-payment-placeholder', () => ({
+  CheckoutPaymentPlaceholder: ({
+    onBack,
+    selectedShippingOption,
+  }: {
+    onBack: () => void
+    selectedShippingOption?: { id: string }
+  }) => (
+    <div
+      data-testid="checkout-payment-placeholder"
+      data-shipping-option={selectedShippingOption?.id}
+    >
+      <button onClick={onBack}>back-payment</button>
+    </div>
+  ),
+}))
+
+describe('CheckoutEntry — gateway screen', () => {
   it('renders the entry screen with guest and auth options', () => {
     render(<CheckoutEntry />)
 
@@ -31,15 +67,7 @@ describe('CheckoutEntry', () => {
     expect(screen.getByText('signIn')).toBeInTheDocument()
   })
 
-  it('shows the address form after clicking "Continue as Guest"', async () => {
-    render(<CheckoutEntry />)
-
-    await userEvent.click(screen.getByText('continueAsGuest'))
-
-    expect(screen.getByTestId('checkout-address-form')).toBeInTheDocument()
-  })
-
-  it('does not show the address form on initial render', () => {
+  it('does not show address form on initial render', () => {
     render(<CheckoutEntry />)
 
     expect(screen.queryByTestId('checkout-address-form')).not.toBeInTheDocument()
@@ -50,5 +78,66 @@ describe('CheckoutEntry', () => {
 
     const signInLink = screen.getByRole('link', { name: 'signIn' })
     expect(signInLink).toHaveAttribute('href', '/login')
+  })
+})
+
+describe('CheckoutEntry — multi-step flow', () => {
+  it('shows address form (step 1) after clicking "Continue as Guest"', async () => {
+    render(<CheckoutEntry />)
+
+    await userEvent.click(screen.getByText('continueAsGuest'))
+
+    expect(screen.getByTestId('checkout-address-form')).toBeInTheDocument()
+  })
+
+  it('moves to shipping method form (step 2) after address is submitted', async () => {
+    render(<CheckoutEntry />)
+
+    await userEvent.click(screen.getByText('continueAsGuest'))
+    await userEvent.click(screen.getByText('submit-address'))
+
+    expect(screen.getByTestId('checkout-shipping-method-form')).toBeInTheDocument()
+  })
+
+  it('moves to payment placeholder (step 3) after shipping method is selected', async () => {
+    render(<CheckoutEntry />)
+
+    await userEvent.click(screen.getByText('continueAsGuest'))
+    await userEvent.click(screen.getByText('submit-address'))
+    await userEvent.click(screen.getByText('submit-shipping'))
+
+    expect(screen.getByTestId('checkout-payment-placeholder')).toBeInTheDocument()
+  })
+
+  it('goes back to address form when back is clicked on shipping method step', async () => {
+    render(<CheckoutEntry />)
+
+    await userEvent.click(screen.getByText('continueAsGuest'))
+    await userEvent.click(screen.getByText('submit-address'))
+    await userEvent.click(screen.getByText('back-shipping'))
+
+    expect(screen.getByTestId('checkout-address-form')).toBeInTheDocument()
+  })
+
+  it('passes selectedShippingOption to payment step', async () => {
+    render(<CheckoutEntry />)
+
+    await userEvent.click(screen.getByText('continueAsGuest'))
+    await userEvent.click(screen.getByText('submit-address'))
+    await userEvent.click(screen.getByText('submit-shipping'))
+
+    const paymentStep = screen.getByTestId('checkout-payment-placeholder')
+    expect(paymentStep).toHaveAttribute('data-shipping-option', 'standard')
+  })
+
+  it('goes back to shipping method when back is clicked on payment step', async () => {
+    render(<CheckoutEntry />)
+
+    await userEvent.click(screen.getByText('continueAsGuest'))
+    await userEvent.click(screen.getByText('submit-address'))
+    await userEvent.click(screen.getByText('submit-shipping'))
+    await userEvent.click(screen.getByText('back-payment'))
+
+    expect(screen.getByTestId('checkout-shipping-method-form')).toBeInTheDocument()
   })
 })

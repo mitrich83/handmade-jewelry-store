@@ -23,11 +23,23 @@ import {
 import { checkoutAddressSchema, type CheckoutAddressFormValues } from './checkout-address-schema'
 import { CheckoutOrderSummary } from './checkout-order-summary'
 import { CheckoutSteps } from './checkout-steps'
-import { useSubmitCheckoutOrder } from './hooks/use-submit-checkout-order'
 
-export function CheckoutAddressForm() {
+const CHECKOUT_COUNTRY_OPTIONS: { value: string; label: string }[] = [
+  { value: 'US', label: 'United States' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'GB', label: 'United Kingdom' },
+  { value: 'AU', label: 'Australia' },
+  { value: 'DE', label: 'Germany' },
+  { value: 'FR', label: 'France' },
+]
+
+interface CheckoutAddressFormProps {
+  defaultValues?: Partial<CheckoutAddressFormValues>
+  onNext: (values: CheckoutAddressFormValues) => void
+}
+
+export function CheckoutAddressForm({ defaultValues, onNext }: CheckoutAddressFormProps) {
   const t = useTranslations('checkoutPage')
-  const { submitOrder, isSubmitting, submitError } = useSubmitCheckoutOrder()
 
   const form = useForm<CheckoutAddressFormValues>({
     resolver: zodResolver(checkoutAddressSchema),
@@ -41,12 +53,9 @@ export function CheckoutAddressForm() {
       postalCode: '',
       country: 'US',
       phone: '',
+      ...defaultValues,
     },
   })
-
-  function handleFormSubmit(formValues: CheckoutAddressFormValues) {
-    submitOrder(formValues)
-  }
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -54,7 +63,7 @@ export function CheckoutAddressForm() {
         <CheckoutSteps currentStep={1} />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleFormSubmit)} noValidate>
+          <form onSubmit={form.handleSubmit(onNext)} noValidate>
             {/* Contact */}
             <fieldset className="mb-8">
               <legend className="mb-4 text-lg font-semibold text-foreground">
@@ -195,12 +204,11 @@ export function CheckoutAddressForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="US">United States</SelectItem>
-                          <SelectItem value="CA">Canada</SelectItem>
-                          <SelectItem value="GB">United Kingdom</SelectItem>
-                          <SelectItem value="AU">Australia</SelectItem>
-                          <SelectItem value="DE">Germany</SelectItem>
-                          <SelectItem value="FR">France</SelectItem>
+                          {CHECKOUT_COUNTRY_OPTIONS.map(({ value, label }) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -227,14 +235,8 @@ export function CheckoutAddressForm() {
               />
             </fieldset>
 
-            {submitError && (
-              <p role="alert" className="mb-4 text-sm text-destructive">
-                {t('submitError')}
-              </p>
-            )}
-
-            <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? t('submitting') : t('continueToShipping')}
+            <Button type="submit" size="lg" className="w-full">
+              {t('continueToShippingMethod')}
             </Button>
           </form>
         </Form>
