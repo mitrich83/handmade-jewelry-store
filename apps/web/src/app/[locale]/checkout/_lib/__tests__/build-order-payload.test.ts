@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import type { CartItem } from '@jewelry/shared'
-import { buildOrderPayload, CHECKOUT_SHIPPING_COST } from '../build-order-payload'
+import { buildOrderPayload } from '../build-order-payload'
+
+const CHECKOUT_SHIPPING_COST = 9.99
 import type { CheckoutAddressFormValues } from '../../_components/checkout-address-schema'
 
 const mockCartItems: CartItem[] = [
@@ -59,18 +61,12 @@ describe('buildOrderPayload()', () => {
 
   it('calculates subtotal as sum of price × quantity across all items', () => {
     // 49.99 × 2 = 99.98, 129.99 × 1 = 129.99 → subtotal = 229.97
-    const payload = buildOrderPayload(mockCartItems, mockFormValues)
+    const payload = buildOrderPayload(mockCartItems, mockFormValues, CHECKOUT_SHIPPING_COST)
 
     expect(payload.subtotal).toBeCloseTo(229.97, 2)
   })
 
-  it('uses the default CHECKOUT_SHIPPING_COST when shippingCost is not provided', () => {
-    const payload = buildOrderPayload(mockCartItems, mockFormValues)
-
-    expect(payload.shippingCost).toBe(CHECKOUT_SHIPPING_COST)
-  })
-
-  it('uses a custom shippingCost when provided', () => {
+  it('stores the provided shippingCost in the payload', () => {
     const payload = buildOrderPayload(mockCartItems, mockFormValues, 15.0)
 
     expect(payload.shippingCost).toBe(15.0)
@@ -82,14 +78,21 @@ describe('buildOrderPayload()', () => {
     expect(payload.total).toBeCloseTo(payload.subtotal + 10.0, 2)
   })
 
+  it('calculates total correctly when shipping is free (0)', () => {
+    const payload = buildOrderPayload(mockCartItems, mockFormValues, 0)
+
+    expect(payload.shippingCost).toBe(0)
+    expect(payload.total).toBeCloseTo(payload.subtotal, 2)
+  })
+
   it('sets source to "web"', () => {
-    const payload = buildOrderPayload(mockCartItems, mockFormValues)
+    const payload = buildOrderPayload(mockCartItems, mockFormValues, CHECKOUT_SHIPPING_COST)
 
     expect(payload.source).toBe('web')
   })
 
   it('returns an empty items array when cart is empty', () => {
-    const payload = buildOrderPayload([], mockFormValues)
+    const payload = buildOrderPayload([], mockFormValues, CHECKOUT_SHIPPING_COST)
 
     expect(payload.items).toHaveLength(0)
     expect(payload.subtotal).toBe(0)
@@ -104,7 +107,11 @@ describe('buildOrderPayload()', () => {
       phone: '+1-555-000-1234',
     }
 
-    const payload = buildOrderPayload(mockCartItems, formValuesWithOptionals)
+    const payload = buildOrderPayload(
+      mockCartItems,
+      formValuesWithOptionals,
+      CHECKOUT_SHIPPING_COST,
+    )
 
     expect(payload.shippingAddress.addressLine2).toBe('Apt 4B')
     expect(payload.shippingAddress.state).toBe('NY')
