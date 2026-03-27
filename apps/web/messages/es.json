@@ -168,6 +168,9 @@
     "cardFormLabel": "Formulario de pago con tarjeta",
     "stripeComingSoon": "Pago con tarjeta vía Stripe — próxima versión",
     "placeOrder": "Realizar pedido",
-    "securePaymentBadge": "Cifrado SSL de 256 bits — con Stripe"
+    "securePaymentBadge": "Cifrado SSL de 256 bits — con Stripe",
+    "payNow": "Pagar {amount}",
+    "paymentLoading": "Preparando el formulario de pago…",
+    "initiateCheckoutError": "No se pudo inicializar el pago. Vuelve atrás e inténtalo de nuevo."
   }
 }

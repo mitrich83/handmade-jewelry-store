@@ -168,6 +168,9 @@
     "cardFormLabel": "Форма оплаты картой",
     "stripeComingSoon": "Оплата картой через Stripe — в следующем релизе",
     "placeOrder": "Оформить заказ",
-    "securePaymentBadge": "256-битное SSL-шифрование — на базе Stripe"
+    "securePaymentBadge": "256-битное SSL-шифрование — на базе Stripe",
+    "payNow": "Оплатить {amount}",
+    "paymentLoading": "Подготовка формы оплаты…",
+    "initiateCheckoutError": "Не удалось инициализировать оплату. Вернитесь и попробуйте снова."
   }
 }

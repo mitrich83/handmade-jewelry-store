@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { CheckoutAddressForm } from './checkout-address-form'
 import { CheckoutShippingMethodForm } from './checkout-shipping-method-form'
-import { CheckoutPaymentPlaceholder } from './checkout-payment-placeholder'
+import { CheckoutPaymentForm } from './checkout-payment-form'
 import type { CheckoutAddressFormValues } from './checkout-address-schema'
 import type { ShippingOption } from '../_lib/shipping-options'
 
@@ -76,7 +76,7 @@ export function CheckoutEntry() {
 
     if (flowState.step === 3 && flowState.addressValues) {
       return (
-        <CheckoutPaymentPlaceholder
+        <CheckoutPaymentForm
           addressValues={flowState.addressValues}
           shippingCost={flowState.resolvedShippingCost}
           selectedShippingOption={flowState.selectedShippingOption ?? undefined}

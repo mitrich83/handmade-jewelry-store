@@ -41,8 +41,8 @@ vi.mock('../checkout-shipping-method-form', () => ({
   ),
 }))
 
-vi.mock('../checkout-payment-placeholder', () => ({
-  CheckoutPaymentPlaceholder: ({
+vi.mock('../checkout-payment-form', () => ({
+  CheckoutPaymentForm: ({
     onBack,
     selectedShippingOption,
   }: {
