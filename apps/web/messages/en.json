@@ -168,6 +168,9 @@
     "cardFormLabel": "Card payment form",
     "stripeComingSoon": "Stripe card payment — coming in next release",
     "placeOrder": "Place Order",
-    "securePaymentBadge": "256-bit SSL encryption — powered by Stripe"
+    "securePaymentBadge": "256-bit SSL encryption — powered by Stripe",
+    "payNow": "Pay {amount}",
+    "paymentLoading": "Preparing payment form…",
+    "initiateCheckoutError": "Could not initialize payment. Please go back and try again."
   }
 }
