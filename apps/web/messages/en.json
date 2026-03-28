@@ -197,5 +197,30 @@
     "shippingAddressTitle": "Shipping To",
     "itemQuantity": "Qty: {quantity}",
     "continueShopping": "Continue Shopping"
+  },
+  "productDetail": {
+    "breadcrumbLabel": "Product page location",
+    "breadcrumbHome": "Home",
+    "breadcrumbShop": "Shop",
+    "imageAlt": "photo {index}",
+    "thumbnailsLabel": "Product photo thumbnails",
+    "thumbnailAlt": "Photo {index}",
+    "inStock": "In stock ({count} available)",
+    "outOfStock": "Out of stock",
+    "madeToOrder": "Made to order",
+    "oneOfAKind": "One of a kind",
+    "material": "Material",
+    "descriptionLabel": "Product description",
+    "descriptionTitle": "About this piece",
+    "dimensionsLabel": "Product dimensions",
+    "dimensionsTitle": "Dimensions",
+    "length": "Length",
+    "width": "Width",
+    "height": "Height",
+    "diameter": "Diameter",
+    "weight": "Weight",
+    "beadSize": "Bead size",
+    "ratingLabel": "{rating} out of 5 stars, {count} reviews",
+    "productionTime": "Handcrafted to order — ready in {days} business days"
   }
 }

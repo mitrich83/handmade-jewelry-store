@@ -12,6 +12,7 @@ jest.mock('resend', () => ({
 
 const buildMockConfigService = () => ({
   getOrThrow: jest.fn().mockReturnValue('re_test_key'),
+  get: jest.fn().mockReturnValue('re_test_key'),
 })
 
 const mockOrderConfirmationData = {

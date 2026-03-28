@@ -197,5 +197,30 @@
     "shippingAddressTitle": "Dirección de envío",
     "itemQuantity": "Cant.: {quantity}",
     "continueShopping": "Seguir comprando"
+  },
+  "productDetail": {
+    "breadcrumbLabel": "Ubicación de la página del producto",
+    "breadcrumbHome": "Inicio",
+    "breadcrumbShop": "Tienda",
+    "imageAlt": "foto {index}",
+    "thumbnailsLabel": "Miniaturas de fotos del producto",
+    "thumbnailAlt": "Foto {index}",
+    "inStock": "En stock ({count} disponibles)",
+    "outOfStock": "Agotado",
+    "madeToOrder": "Hecho a pedido",
+    "oneOfAKind": "Pieza única",
+    "material": "Material",
+    "descriptionLabel": "Descripción del producto",
+    "descriptionTitle": "Sobre esta pieza",
+    "dimensionsLabel": "Dimensiones del producto",
+    "dimensionsTitle": "Dimensiones",
+    "length": "Largo",
+    "width": "Ancho",
+    "height": "Altura",
+    "diameter": "Diámetro",
+    "weight": "Peso",
+    "beadSize": "Tamaño de cuentas",
+    "ratingLabel": "{rating} de 5 estrellas, {count} reseñas",
+    "productionTime": "Hecho a mano bajo pedido — listo en {days} días hábiles"
   }
 }
