@@ -23,7 +23,10 @@ export class EmailService {
   private readonly resend: Resend
 
   constructor(private readonly configService: ConfigService) {
-    this.resend = new Resend(this.configService.getOrThrow<string>('RESEND_API_KEY'))
+    // In dev/test environments RESEND_API_KEY may be absent — Resend SDK accepts any string
+    // and all failures are caught in send(), so the app starts and emails silently no-op.
+    const apiKey = this.configService.get<string>('RESEND_API_KEY') ?? 'dev_no_op'
+    this.resend = new Resend(apiKey)
   }
 
   async sendOrderConfirmation(data: OrderConfirmationData): Promise<void> {

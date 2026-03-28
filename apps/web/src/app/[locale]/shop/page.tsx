@@ -55,25 +55,62 @@ export default async function CatalogPage({ params, searchParams }: CatalogPageP
 
   const t = await getTranslations('catalog')
 
-  const currentPage = Math.max(1, Number(resolvedSearchParams.page ?? 1))
+  const parsedPage = Number(resolvedSearchParams.page ?? 1)
+  const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1
   const categorySlug = resolvedSearchParams.categorySlug
-  const minPrice = resolvedSearchParams.minPrice ? Number(resolvedSearchParams.minPrice) : undefined
-  const maxPrice = resolvedSearchParams.maxPrice ? Number(resolvedSearchParams.maxPrice) : undefined
-  const sortBy = resolvedSearchParams.sortBy as 'price' | 'createdAt' | 'avgRating' | undefined
-  const sortOrder = resolvedSearchParams.sortOrder as 'asc' | 'desc' | undefined
 
-  const [{ data: products, meta }, categories] = await Promise.all([
-    fetchProducts({
-      page: currentPage,
-      limit: PRODUCTS_PER_PAGE,
-      categorySlug,
-      minPrice,
-      maxPrice,
-      sortBy,
-      sortOrder,
-    }),
-    fetchCategories(),
-  ])
+  const parsedMinPrice = resolvedSearchParams.minPrice
+    ? Number(resolvedSearchParams.minPrice)
+    : undefined
+  const parsedMaxPrice = resolvedSearchParams.maxPrice
+    ? Number(resolvedSearchParams.maxPrice)
+    : undefined
+  // Discard NaN and negative values; also discard inverted range (minPrice > maxPrice)
+  const minPrice =
+    parsedMinPrice !== undefined && Number.isFinite(parsedMinPrice) && parsedMinPrice >= 0
+      ? parsedMinPrice
+      : undefined
+  const maxPrice =
+    parsedMaxPrice !== undefined && Number.isFinite(parsedMaxPrice) && parsedMaxPrice >= 0
+      ? parsedMaxPrice
+      : undefined
+  const sanitizedMinPrice =
+    minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice ? undefined : minPrice
+  const sanitizedMaxPrice =
+    minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice ? undefined : maxPrice
+
+  const VALID_SORT_FIELDS = new Set(['price', 'createdAt', 'avgRating'])
+  const VALID_SORT_ORDERS = new Set(['asc', 'desc'])
+  const sortBy = VALID_SORT_FIELDS.has(resolvedSearchParams.sortBy ?? '')
+    ? (resolvedSearchParams.sortBy as 'price' | 'createdAt' | 'avgRating')
+    : undefined
+  const sortOrder = VALID_SORT_ORDERS.has(resolvedSearchParams.sortOrder ?? '')
+    ? (resolvedSearchParams.sortOrder as 'asc' | 'desc')
+    : undefined
+
+  let products: Awaited<ReturnType<typeof fetchProducts>>['data'] = []
+  let meta = { totalCount: 0, totalPages: 1, page: 1, limit: PRODUCTS_PER_PAGE }
+  let categories: Awaited<ReturnType<typeof fetchCategories>> = []
+
+  try {
+    const [productsResponse, categoriesResponse] = await Promise.all([
+      fetchProducts({
+        page: currentPage,
+        limit: PRODUCTS_PER_PAGE,
+        categorySlug,
+        minPrice: sanitizedMinPrice,
+        maxPrice: sanitizedMaxPrice,
+        sortBy,
+        sortOrder,
+      }),
+      fetchCategories(),
+    ])
+    products = productsResponse.data
+    meta = productsResponse.meta
+    categories = categoriesResponse
+  } catch {
+    // API unavailable — render empty state rather than crashing the page
+  }
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { name: t('breadcrumbHome'), href: `/${locale}` },

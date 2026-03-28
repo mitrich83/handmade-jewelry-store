@@ -197,5 +197,30 @@
     "shippingAddressTitle": "Адрес доставки",
     "itemQuantity": "Кол-во: {quantity}",
     "continueShopping": "Продолжить покупки"
+  },
+  "productDetail": {
+    "breadcrumbLabel": "Расположение страницы товара",
+    "breadcrumbHome": "Главная",
+    "breadcrumbShop": "Магазин",
+    "imageAlt": "фото {index}",
+    "thumbnailsLabel": "Миниатюры фотографий товара",
+    "thumbnailAlt": "Фото {index}",
+    "inStock": "В наличии ({count} шт.)",
+    "outOfStock": "Нет в наличии",
+    "madeToOrder": "Под заказ",
+    "oneOfAKind": "Единственный экземпляр",
+    "material": "Материал",
+    "descriptionLabel": "Описание товара",
+    "descriptionTitle": "Об этом украшении",
+    "dimensionsLabel": "Размеры товара",
+    "dimensionsTitle": "Размеры",
+    "length": "Длина",
+    "width": "Ширина",
+    "height": "Высота",
+    "diameter": "Диаметр",
+    "weight": "Вес",
+    "beadSize": "Размер бусины",
+    "ratingLabel": "{rating} из 5 звёзд, {count} отзывов",
+    "productionTime": "Изготавливается на заказ — готово через {days} рабочих дней"
   }
 }

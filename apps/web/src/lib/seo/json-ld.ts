@@ -17,3 +17,43 @@ export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]) {
     })),
   }
 }
+
+export interface ProductJsonLdProps {
+  title: string
+  description: string
+  price: string
+  images: string[]
+  slug: string
+  stock: number
+  material: string | null
+  sku: string | null
+  avgRating: number
+  reviewCount: number
+}
+
+export function generateProductJsonLd(product: ProductJsonLdProps) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description,
+    image: product.images,
+    ...(product.sku && { sku: product.sku }),
+    ...(product.material && { material: product.material }),
+    ...(product.avgRating > 0 && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: product.avgRating,
+        reviewCount: product.reviewCount,
+      },
+    }),
+    offers: {
+      '@type': 'Offer',
+      price: parseFloat(product.price).toFixed(2),
+      priceCurrency: 'USD',
+      availability:
+        product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      url: `${SITE_URL}/shop/${product.slug}`,
+    },
+  }
+}

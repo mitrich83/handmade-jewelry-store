@@ -1,14 +1,5 @@
 import { Type } from 'class-transformer'
-import {
-  IsEnum,
-  IsInt,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator'
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator'
 
 export enum ProductSortField {
   PRICE = 'price',
@@ -45,13 +36,14 @@ export class ProductQueryDto {
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
-  @IsPositive()
+  // @Min(0) not @IsPositive() — zero is a valid lower bound ("from $0")
+  @Min(0)
   @IsOptional()
   minPrice?: number
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
-  @IsPositive()
+  @Min(0)
   @IsOptional()
   maxPrice?: number
 
