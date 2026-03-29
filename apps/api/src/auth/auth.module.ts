@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { JwtAuthGuard } from './guards/jwt-auth.guard'
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
+import { RolesGuard } from './guards/roles.guard'
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
@@ -20,7 +21,12 @@ import { LocalStrategy } from './strategies/local.strategy'
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN', '15m') },
+        signOptions: {
+          expiresIn: configService.get(
+            'JWT_EXPIRES_IN',
+            '15m',
+          ) as `${number}${'s' | 'm' | 'h' | 'd' | 'w'}`,
+        },
       }),
     }),
   ],
@@ -32,7 +38,8 @@ import { LocalStrategy } from './strategies/local.strategy'
     JwtAuthGuard,
     JwtRefreshStrategy,
     JwtRefreshGuard,
+    RolesGuard,
   ],
-  exports: [JwtAuthGuard, AuthService],
+  exports: [JwtAuthGuard, RolesGuard, AuthService],
 })
 export class AuthModule {}
