@@ -10,6 +10,10 @@ export interface Category {
   slug: string
 }
 
+export interface CategoryWithCount extends Category {
+  _count: { products: number }
+}
+
 export interface Product {
   id: string
   title: string
