@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { headers } from 'next/headers'
 import { Inter } from 'next/font/google'
+import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from '@/components/shared/theme-provider'
 import './globals.css'
 
@@ -33,6 +34,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           storageKey="jewelry-theme"
         >
           {children}
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

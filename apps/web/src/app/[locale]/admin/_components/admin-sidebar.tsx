@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { LayoutDashboard, Package, ShoppingCart } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingCart, Tag } from 'lucide-react'
 import { Link, usePathname } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 
@@ -32,6 +32,12 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
       labelKey: 'navOrders' as const,
       icon: <ShoppingCart className="size-4" aria-hidden="true" />,
       isActive: pathname.startsWith('/admin/orders'),
+    },
+    {
+      href: `/${locale}/admin/categories`,
+      labelKey: 'navCategories' as const,
+      icon: <Tag className="size-4" aria-hidden="true" />,
+      isActive: pathname.startsWith('/admin/categories'),
     },
   ]
 
